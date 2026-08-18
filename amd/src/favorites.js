@@ -74,6 +74,87 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/log', 'core/sortable_l
             });
         };
 
+        /**
+         * Get default title for favorites.
+         *
+         * Rules:
+         * 1. If #defaulttemplate-single div exists, combine its first <p> text with #page-header h1
+         * 2. If .hsuforum-thread-header div exists, use breadcrumb items (skip first) joined by '/'
+         * 3. Otherwise, use first breadcrumb item + "：" + #page-header h1
+         * 4. Fallback to document title
+         *
+         * @returns {string}
+         */
+        const getDefaultTitle = function() {
+            var $single = $('#defaulttemplate-single');
+
+            if ($single.length) {
+                var contentTitle = $.trim($single.find('p').first().text());
+                var $header = $('#page-header');
+                var headerTitle = '';
+                if ($header.length) {
+                    headerTitle = $.trim($header.find('h1').first().text());
+                }
+                if (headerTitle && contentTitle) {
+                    return headerTitle + ' / ' + contentTitle;
+                }
+                if (contentTitle) {
+                    return contentTitle;
+                }
+            }
+
+            var $threadHeader = $('div.hsuforum-thread-header');
+            if ($threadHeader.length) {
+                var $crumbsForum = $('li.breadcrumb-item');
+                if ($crumbsForum.length > 1) {
+                    var parts = [];
+                    var normalize = function(s) {
+                        return $.trim(s).replace(/\s+/g, '');
+                    };
+                    var secondItemText = normalize($crumbsForum.eq(1).text());
+                    var secondItemInThird = false;
+                    if ($crumbsForum.length > 2) {
+                        var thirdItemText = normalize($crumbsForum.eq(2).text());
+                        if (secondItemText && thirdItemText.indexOf(secondItemText) !== -1) {
+                            secondItemInThird = true;
+                        }
+                    }
+                    $crumbsForum.each(function(index) {
+                        if (index > 0) {
+                            if (index === 1 && secondItemInThird) {
+                                return;
+                            }
+                            var text = normalize($.trim($(this).text()));
+                            if (text) {
+                                parts.push(text);
+                            }
+                        }
+                    });
+                    if (parts.length) {
+                        return parts.join(' / ');
+                    }
+                }
+            }
+
+            var $headerFallback = $('#page-header');
+            if ($headerFallback.length) {
+                var courseTitle = $.trim($headerFallback.find('h1').first().text());
+                var $crumbs = $('li.breadcrumb-item');
+                var courseCatalog = '';
+                if ($crumbs.length) {
+                    courseCatalog = $.trim($crumbs.first().text());
+                }
+                if (courseCatalog && courseTitle) {
+                    return courseCatalog + ' / ' + courseTitle;
+                }
+                if (courseTitle) {
+                    return courseTitle;
+                }
+            }
+
+            return $.trim($('title').text());
+        };
+
         const favoritesModule = {
 
             /**
@@ -195,7 +276,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/log', 'core/sortable_l
                     favoritesModule.setUrl({
                         'hash': opts.hash,
                         'url': window.location.href,
-                    }, $('title').text());
+                    }, getDefaultTitle());
 
                 }).on('click', '#block_user_favorites_delete', function() {
                     // Delete current pages from favorites.
