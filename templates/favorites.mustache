@@ -50,12 +50,30 @@
 <ol id="block_user_favorites-items" class="list">
     {{#data}}
         <li data-hash="{{hash}}">
-            <div class="fa-control">
-                <i class="fa fa-pen-to-square favorite-edit" title="{{# str}} btn:edit, block_user_favorites {{/ str}}"></i>
-                <i class="fa fa-xmark favorite-remove" title="{{# str}} btn:remove, block_user_favorites {{/ str}}"></i>
-                <i class="fa fa-arrows-up-down" role="button" aria-haspopup="true" data-drag-type="move" title="{{# str}} btn:drag, block_user_favorites {{/ str}}"></i>
-            </div>
+            <i class="fa fa-arrows-up-down drag-icon" role="button" aria-haspopup="true" data-drag-type="move" title="{{# str}} btn:drag, block_user_favorites {{/ str}}"></i>
             <a class="{{class}}" href="{{url}}">{{name}}</a>
+            <div class="fa-menu-wrap">
+                <i class="fa fa-ellipsis-v fa-menu-toggle" role="button" aria-haspopup="true" tabindex="0" title="更多操作"></i>
+                <div class="fa-menu-dropdown" role="menu">
+                    <div class="fa-menu-item favorite-move-up" role="menuitem">
+                        <i class="fa fa-arrow-up"></i>
+                        <span>上移</span>
+                    </div>
+                    <div class="fa-menu-item favorite-move-down" role="menuitem">
+                        <i class="fa fa-arrow-down"></i>
+                        <span>下移</span>
+                    </div>
+                    <div class="fa-menu-divider"></div>
+                    <div class="fa-menu-item favorite-edit" role="menuitem">
+                        <i class="fa fa-pen-to-square"></i>
+                        <span>{{# str}} btn:edit, block_user_favorites {{/ str}}</span>
+                    </div>
+                    <div class="fa-menu-item favorite-remove" role="menuitem">
+                        <i class="fa fa-xmark"></i>
+                        <span>{{# str}} btn:remove, block_user_favorites {{/ str}}</span>
+                    </div>
+                </div>
+            </div>
         </li>
     {{/data}}
 </ol>

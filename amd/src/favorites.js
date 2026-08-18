@@ -284,17 +284,49 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/log', 'core/sortable_l
                         'hash': opts.hash,
                     });
 
+                }).on('click', '.fa-menu-toggle', function(e) {
+                    e.stopPropagation();
+                    var $menu = $(this).next('.fa-menu-dropdown');
+                    $('.fa-menu-dropdown').not($menu).removeClass('show');
+                    $menu.toggleClass('show');
+
+                }).on('click', '.fa-menu-dropdown', function(e) {
+                    e.stopPropagation();
+
+                }).on('click', '.favorite-move-up', function() {
+                    $('.fa-menu-dropdown').removeClass('show');
+                    var $li = $(this).closest('li');
+                    var $prev = $li.prev('li');
+                    if ($prev.length) {
+                        $li.insertBefore($prev);
+                        favoritesModule.setOrder();
+                    }
+
+                }).on('click', '.favorite-move-down', function() {
+                    $('.fa-menu-dropdown').removeClass('show');
+                    var $li = $(this).closest('li');
+                    var $next = $li.next('li');
+                    if ($next.length) {
+                        $li.insertAfter($next);
+                        favoritesModule.setOrder();
+                    }
+
                 }).on('click', '.favorite-remove', function() {
-                    // Remove a fav in the list.
+                    $('.fa-menu-dropdown').removeClass('show');
                     favoritesModule.remove($(this).closest('li').data());
 
                 }).on('click', '.favorite-edit', function() {
-                    // Edit a fav int the list.
-                    let data = $(this).parent().parent().data();
+                    $('.fa-menu-dropdown').removeClass('show');
+                    var $li = $(this).closest('li');
+                    var data = $li.data();
                     Log.log('.favorite-edit');
                     Log.log(data);
                     data.url = null;
-                    favoritesModule.setUrl(data, $(this).parent().parent().find('a').text());
+                    favoritesModule.setUrl(data, $li.find('a').text());
+                });
+
+                $(document).on('click', function() {
+                    $('.fa-menu-dropdown').removeClass('show');
                 });
                 // Instantiate new SortableList component. this only needs to happen once (i.e. not on refresh again).
                 new SortableList('ol#block_user_favorites-items');
