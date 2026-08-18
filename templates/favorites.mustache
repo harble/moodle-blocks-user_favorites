@@ -53,15 +53,15 @@
             <i class="fa {{icon}} item-icon" data-drag-type="move" title="{{# str}} btn:drag, block_user_favorites {{/ str}}"></i>
             <a class="{{class}}" href="{{url}}">{{name}}</a>
             <div class="fa-menu-wrap">
-                <i class="fa fa-ellipsis-v fa-menu-toggle" role="button" aria-haspopup="true" tabindex="0" title="更多操作"></i>
+                <i class="fa fa-ellipsis-v fa-menu-toggle" role="button" aria-haspopup="true" tabindex="0" title="{{# str}} btn:moreactions, block_user_favorites {{/ str}}"></i>
                 <div class="fa-menu-dropdown" role="menu">
                     <div class="fa-menu-item favorite-move-up" role="menuitem">
                         <i class="fa fa-arrow-up"></i>
-                        <span>上移</span>
+                        <span>{{# str}} btn:moveup, block_user_favorites {{/ str}}</span>
                     </div>
                     <div class="fa-menu-item favorite-move-down" role="menuitem">
                         <i class="fa fa-arrow-down"></i>
-                        <span>下移</span>
+                        <span>{{# str}} btn:movedown, block_user_favorites {{/ str}}</span>
                     </div>
                     <div class="fa-menu-divider"></div>
                     <div class="fa-menu-item favorite-edit" role="menuitem">
@@ -81,7 +81,7 @@
 {{#has_favorites}}
 {{#hasspagination}}
 {{#hasprev}}
-<span class="fav-page-link" data-page="{{prevpage}}" title="上一页"><i class="fa fa-chevron-left"></i></span>
+<span class="fav-page-link" data-page="{{prevpage}}" title="{{# str}} btn:prevpage, block_user_favorites {{/ str}}"><i class="fa fa-chevron-left"></i></span>
 {{/hasprev}}
 {{#pages}}
 {{#isactive}}
@@ -92,7 +92,7 @@
 {{/isactive}}
 {{/pages}}
 {{#hasnext}}
-<span class="fav-page-link" data-page="{{nextpage}}" title="下一页"><i class="fa fa-chevron-right"></i></span>
+<span class="fav-page-link" data-page="{{nextpage}}" title="{{# str}} btn:nextpage, block_user_favorites {{/ str}}"><i class="fa fa-chevron-right"></i></span>
 {{/hasnext}}
 {{/hasspagination}}
 {{/has_favorites}}

@@ -41,6 +41,11 @@ $string['btn:remove'] = 'Delete favourite';
 $string['btn:add'] = 'Favourite this page';
 $string['btn:edit'] = 'Edit favourite';
 $string['btn:drag'] = 'Drag favourite';
+$string['btn:moveup'] = 'Move up';
+$string['btn:movedown'] = 'Move down';
+$string['btn:moreactions'] = 'More actions';
+$string['btn:prevpage'] = 'Previous page';
+$string['btn:nextpage'] = 'Next page';
 
 // Js.
 $string['javascript:yes'] = 'Save';
