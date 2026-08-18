@@ -135,7 +135,8 @@ class external extends external_api {
                 throw new moodle_exception('invalidurl', 'block_user_favorites');
             }
 
-            $favorites->set_by_url($params['optional']['url'], $params['title']);
+            $type = !empty($params['optional']['type']) ? $params['optional']['type'] : '';
+            $favorites->set_by_url($params['optional']['url'], $params['title'], 0, $type);
 
             return [
                 'result_code' => self::RESPONSE_CODE_SUCCESS,
@@ -164,6 +165,7 @@ class external extends external_api {
                 'optional' => new external_single_structure(
                     [
                         'url' => new external_value(PARAM_URL, 'URL', VALUE_OPTIONAL),
+                        'type' => new external_value(PARAM_TEXT, 'Page type', VALUE_OPTIONAL),
                     ]
                 ),
             ]

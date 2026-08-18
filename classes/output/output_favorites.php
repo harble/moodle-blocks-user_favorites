@@ -79,6 +79,13 @@ class output_favorites implements renderable, templatable {
         $hascurrenturl = false;
         $currenthash = md5($this->currenturl);
 
+        $typeicons = [
+            'share' => 'fa-share-nodes',
+            'question' => 'fa-comments',
+            'course' => 'fa-book',
+            'other' => 'fa-star',
+        ];
+
         if ($this->favorites->has_favorites()) {
             $favorites = $this->favorites->get_all();
             foreach ($favorites as $favorite) {
@@ -88,12 +95,17 @@ class output_favorites implements renderable, templatable {
                     $hascurrenturl = true;
                 }
 
+                $type = !empty($favorite->type) ? $favorite->type : 'other';
+                $icon = isset($typeicons[$type]) ? $typeicons[$type] : 'fa-star';
+
                 $data[$favorite->hash] = [
                     'name' => $favorite->title,
                     'class' => $iscurrent ? 'active' : '',
                     'url' => $favorite->url,
                     'hash' => $favorite->hash,
                     'sortorder' => $favorite->sortorder,
+                    'type' => $type,
+                    'icon' => $icon,
                 ];
             }
         }

@@ -50,7 +50,7 @@
 <ol id="block_user_favorites-items" class="list">
     {{#data}}
         <li data-hash="{{hash}}">
-            <i class="fa fa-arrows-up-down drag-icon" role="button" aria-haspopup="true" data-drag-type="move" title="{{# str}} btn:drag, block_user_favorites {{/ str}}"></i>
+            <i class="fa {{icon}} item-icon" data-drag-type="move" title="{{# str}} btn:drag, block_user_favorites {{/ str}}"></i>
             <a class="{{class}}" href="{{url}}">{{name}}</a>
             <div class="fa-menu-wrap">
                 <i class="fa fa-ellipsis-v fa-menu-toggle" role="button" aria-haspopup="true" tabindex="0" title="更多操作"></i>

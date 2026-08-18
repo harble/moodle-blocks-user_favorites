@@ -26,7 +26,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version = 2026032100;
+$plugin->version = 2026081800;
 $plugin->requires = 2023042401;
 $plugin->component = 'block_user_favorites';
 $plugin->release = '5.1.0';

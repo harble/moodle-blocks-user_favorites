@@ -96,8 +96,9 @@ class favorites {
      * @param string $url
      * @param string $title
      * @param int $sort
+     * @param string $type
      */
-    public function set_by_url(string $url, string $title = '', int $sort = 0): void {
+    public function set_by_url(string $url, string $title = '', int $sort = 0, string $type = ''): void {
         global $USER;
         $hash = md5($url);
 
@@ -107,6 +108,7 @@ class favorites {
                 'title' => $title,
                 'sortorder' => $sort,
                 'hash' => $hash,
+                'type' => $type,
             ],
             $hash,
             $USER->id

@@ -15,18 +15,20 @@
 
 .block_user_favorites ol li {
     border-bottom: 1px solid #d1d1d1;
-    padding: 5px 0 !important;
+    padding: 6px 0 !important;
     display: flex;
     align-items: center;
     gap: 6px;
     position: relative;
 }
 
-.block_user_favorites .drag-icon {
+.block_user_favorites .item-icon {
     padding: 3px 6px 3px 0;
     cursor: move;
-    color: #999;
+    color: #666;
     flex-shrink: 0;
+    width: 20px;
+    text-align: center;
 }
 
 .block_user_favorites .fa-menu-wrap {

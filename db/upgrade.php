@@ -47,6 +47,7 @@ function xmldb_block_user_favorites_upgrade(int $oldversion): bool {
         $table->add_field('hash', XMLDB_TYPE_CHAR, '33', null, XMLDB_NOTNULL, null, null);
         $table->add_field('sortorder', XMLDB_TYPE_INTEGER, '11', null, null, null, null);
         $table->add_field('created_at', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('type', XMLDB_TYPE_CHAR, '20', null, null, null, null);
 
         // Adding keys to table block_user_favorites.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
@@ -63,6 +64,17 @@ function xmldb_block_user_favorites_upgrade(int $oldversion): bool {
 
         // Timeline savepoint reached.
         upgrade_block_savepoint(true, 2019062400, 'user_favorites');
+    }
+
+    if ($oldversion < 2026081800) {
+        $table = new xmldb_table('block_user_favorites');
+        $field = new xmldb_field('type', XMLDB_TYPE_CHAR, '20', null, null, null, null);
+
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_block_savepoint(true, 2026081800, 'user_favorites');
     }
 
     return true;

@@ -78,14 +78,15 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/log', 'core/sortable_l
          * Get default title for favorites.
          *
          * Rules:
-         * 1. If #defaulttemplate-single div exists, combine its first <p> text with #page-header h1
-         * 2. If .hsuforum-thread-header div exists, use breadcrumb items (skip first) joined by '/'
-         * 3. Otherwise, use first breadcrumb item + "：" + #page-header h1
-         * 4. Fallback to document title
+         * 1. If #defaulttemplate-single div exists, combine its first <p> text with #page-header h1 (type: share)
+         * 2. If .hsuforum-thread-header div exists, use breadcrumb items (skip first) joined by '/' (type: question)
+         * 3. Otherwise, use first breadcrumb item + "：" + #page-header h1 (type: course)
+         * 4. Fallback to document title (type: other)
          *
-         * @returns {string}
+         * @returns {Object} {title: string, type: string}
          */
         const getDefaultTitle = function() {
+            var result = {title: $.trim($('title').text()), type: 'other'};
             var $single = $('#defaulttemplate-single');
 
             if ($single.length) {
@@ -96,10 +97,14 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/log', 'core/sortable_l
                     headerTitle = $.trim($header.find('h1').first().text());
                 }
                 if (headerTitle && contentTitle) {
-                    return headerTitle + ' / ' + contentTitle;
+                    result.title = headerTitle + ' / ' + contentTitle;
+                    result.type = 'share';
+                    return result;
                 }
                 if (contentTitle) {
-                    return contentTitle;
+                    result.title = contentTitle;
+                    result.type = 'share';
+                    return result;
                 }
             }
 
@@ -131,7 +136,9 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/log', 'core/sortable_l
                         }
                     });
                     if (parts.length) {
-                        return parts.join(' / ');
+                        result.title = parts.join(' / ');
+                        result.type = 'question';
+                        return result;
                     }
                 }
             }
@@ -145,14 +152,18 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/log', 'core/sortable_l
                     courseCatalog = $.trim($crumbs.first().text());
                 }
                 if (courseCatalog && courseTitle) {
-                    return courseCatalog + ' / ' + courseTitle;
+                    result.title = courseCatalog + ' / ' + courseTitle;
+                    result.type = 'course';
+                    return result;
                 }
                 if (courseTitle) {
-                    return courseTitle;
+                    result.title = courseTitle;
+                    result.type = 'course';
+                    return result;
                 }
             }
 
-            return $.trim($('title').text());
+            return result;
         };
 
         const favoritesModule = {
@@ -163,7 +174,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/log', 'core/sortable_l
              * @param {object} data
              * @param {string} title
              */
-            setUrl: function(data, title) {
+            setUrl: function(data, titleResult) {
 
                 if (data.hash === null) {
                     Notification.exception(new Error('No hash found'));
@@ -172,6 +183,15 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/log', 'core/sortable_l
 
                 if (data.hasOwnProperty('url') && data.url === null) {
                     delete data.url;
+                }
+
+                var title = '';
+                var pageType = '';
+                if (typeof titleResult === 'object' && titleResult !== null) {
+                    title = titleResult.title || '';
+                    pageType = titleResult.type || '';
+                } else {
+                    title = titleResult || '';
                 }
 
                 // Remove not correct closed confirm dialogs.
@@ -191,12 +211,18 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/log', 'core/sortable_l
                 }).then(function(modal) {
                     modal.setSaveButtonText(Str.get_string('javascript:yes', 'block_user_favorites'));
                     modal.getRoot().on(ModalEvents.save, function() {
+                        let optionalData = {};
+                        if (data.url) {
+                            optionalData.url = data.url;
+                            if (pageType) {
+                                optionalData.type = pageType;
+                            }
+                        }
+
                         let request = Ajax.call([{
                             methodname: 'block_user_favorites_set_url', args: {
                                 hash: data.hash,
-                                optional: {
-                                    url: data.url,
-                                },
+                                optional: optionalData,
                                 title: modal.getRoot().find('#favorite-url').val(),
                                 blockid: opts.id,
                             }
