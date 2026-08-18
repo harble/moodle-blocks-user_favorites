@@ -110,13 +110,16 @@ class block_user_favorites extends block_base {
         ], 'block_user_favorites');
 
         $url = $this->page->url->out(false);
+        $requesturi = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $url;
+        $baseurl = $this->page->url->out(false, [], false);
+        $fullurl = $baseurl . $requesturi;
+
         $this->page->requires->js_call_amd('block_user_favorites/favorites', 'initialise', [
             [
                 'debugjs' => \block_user_favorites\helper::has_debugging_enabled(),
                 'id' => $this->instance->id,
-                'url' => $url,
-                'hash' => md5($url),
-                // TODO We should add a global config with salt, this way we can make sure there is no bad guy.
+                'url' => $fullurl,
+                'hash' => md5($fullurl),
             ],
         ]);
 
@@ -125,7 +128,7 @@ class block_user_favorites extends block_base {
         $renderer = $this->page->get_renderer('block_user_favorites');
         $this->content->text = $renderer->render_favorites(new output_favorites(
             $favorites,
-            $url
+            $fullurl
         ));
 
         return $this->content;

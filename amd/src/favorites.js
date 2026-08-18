@@ -270,12 +270,12 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/log', 'core/sortable_l
             init: function() {
                 Log.log('Init block_user_favorites');
 
-                $('.block_user_favorites').on('click', '#block_user_favorites_set', function() {
+                $('.block_user_favorites, .block_user_favorites_auto').on('click', '#block_user_favorites_set', function() {
 
                     // Set current as favorite.
                     favoritesModule.setUrl({
                         'hash': opts.hash,
-                        'url': window.location.href,
+                        'url': opts.url,
                     }, getDefaultTitle());
 
                 }).on('click', '#block_user_favorites_delete', function() {

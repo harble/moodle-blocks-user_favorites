@@ -77,21 +77,20 @@ class output_favorites implements renderable, templatable {
         global $PAGE;
         $data = [];
         $hascurrenturl = false;
+        $currenthash = md5($this->currenturl);
+
         if ($this->favorites->has_favorites()) {
             $favorites = $this->favorites->get_all();
             foreach ($favorites as $favorite) {
-                $favoriteurls = [
-                    $favorite->url,
-                    $favorite->url . 'index.php',
-                ];
+                $iscurrent = ($favorite->hash === $currenthash);
 
-                if (in_array($this->currenturl, $favoriteurls, true)) {
+                if ($iscurrent) {
                     $hascurrenturl = true;
                 }
 
                 $data[$favorite->hash] = [
                     'name' => $favorite->title,
-                    'class' => (in_array($this->currenturl, $favoriteurls, true)) ? 'active' : '',
+                    'class' => $iscurrent ? 'active' : '',
                     'url' => $favorite->url,
                     'hash' => $favorite->hash,
                     'sortorder' => $favorite->sortorder,
@@ -102,7 +101,7 @@ class output_favorites implements renderable, templatable {
         return (object) [
             'data' => new \ArrayIterator($data),
             'has_favorites' => $this->favorites->has_favorites(),
-            'hash' => md5($PAGE->url->out()),
+            'hash' => $currenthash,
             'hascurrenturl' => $hascurrenturl,
         ];
     }
