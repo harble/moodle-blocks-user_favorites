@@ -77,6 +77,26 @@
         </li>
     {{/data}}
 </ol>
+{{#pagination}}
+{{#has_favorites}}
+{{#hasspagination}}
+{{#hasprev}}
+<span class="fav-page-link" data-page="{{prevpage}}" title="上一页"><i class="fa fa-chevron-left"></i></span>
+{{/hasprev}}
+{{#pages}}
+{{#isactive}}
+<span class="fav-page-link active" data-page="{{page}}">{{page}}</span>
+{{/isactive}}
+{{^isactive}}
+<span class="fav-page-link" data-page="{{page}}">{{page}}</span>
+{{/isactive}}
+{{/pages}}
+{{#hasnext}}
+<span class="fav-page-link" data-page="{{nextpage}}" title="下一页"><i class="fa fa-chevron-right"></i></span>
+{{/hasnext}}
+{{/hasspagination}}
+{{/has_favorites}}
+{{/pagination}}
 <div class="block_user_favorites-control">
     {{^hascurrenturl}}
         <span class="btn btn-secondary" id="block_user_favorites_set">

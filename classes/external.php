@@ -243,15 +243,16 @@ class external extends external_api {
      *
      * @param string $url
      * @param int $blockid
+     * @param int $page
      *
      * @return array
      * @throws required_capability_exception
      */
-    public static function get_content(string $url, int $blockid): array {
+    public static function get_content(string $url, int $blockid, int $page = 1): array {
         global $PAGE, $USER;
 
         // Parameter validation.
-        $params = self::validate_parameters(self::get_content_parameters(), ['url' => $url, 'blockid' => $blockid]);
+        $params = self::validate_parameters(self::get_content_parameters(), ['url' => $url, 'blockid' => $blockid, 'page' => $page]);
 
         $context = context_block::instance($params['blockid']);
         require_capability('block/user_favorites:view', $context, $USER);
@@ -261,7 +262,7 @@ class external extends external_api {
         $renderer = $PAGE->get_renderer('block_user_favorites');
 
         return [
-            'content' => $renderer->render_favorites(new output_favorites($favorites, $params['url'])),
+            'content' => $renderer->render_favorites(new output_favorites($favorites, $params['url'], $params['page'])),
             'result_code' => self::RESPONSE_CODE_SUCCESS,
         ];
     }
@@ -276,6 +277,7 @@ class external extends external_api {
             [
                 'url' => new external_value(PARAM_URL, 'The current url', VALUE_REQUIRED),
                 'blockid' => new external_value(PARAM_INT, 'The ID of the block', VALUE_REQUIRED),
+                'page' => new external_value(PARAM_INT, 'The current page', VALUE_DEFAULT, 1),
             ]
         );
     }

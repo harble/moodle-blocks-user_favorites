@@ -51,14 +51,28 @@ class output_favorites implements renderable, templatable {
     protected string $currenturl;
 
     /**
+     * @var int $page Current page number
+     */
+    protected int $page;
+
+    /**
+     * @var int $perpage Items per page
+     */
+    protected int $perpage;
+
+    /**
      * Admin catalog product output constructor.
      *
      * @param favorites $favorites
      * @param string $currenturl
+     * @param int $page
+     * @param int $perpage
      */
-    public function __construct(favorites $favorites, string $currenturl = '') {
+    public function __construct(favorites $favorites, string $currenturl = '', int $page = 1, int $perpage = 12) {
         $this->favorites = $favorites;
         $this->currenturl = $currenturl;
+        $this->page = max(1, $page);
+        $this->perpage = $perpage;
     }
 
     /**
@@ -86,35 +100,66 @@ class output_favorites implements renderable, templatable {
             'other' => 'fa-star',
         ];
 
+        $allfavorites = [];
         if ($this->favorites->has_favorites()) {
-            $favorites = $this->favorites->get_all();
-            foreach ($favorites as $favorite) {
-                $iscurrent = ($favorite->hash === $currenthash);
-
-                if ($iscurrent) {
-                    $hascurrenturl = true;
-                }
-
-                $type = !empty($favorite->type) ? $favorite->type : 'other';
-                $icon = isset($typeicons[$type]) ? $typeicons[$type] : 'fa-star';
-
-                $data[$favorite->hash] = [
-                    'name' => $favorite->title,
-                    'class' => $iscurrent ? 'active' : '',
-                    'url' => $favorite->url,
-                    'hash' => $favorite->hash,
-                    'sortorder' => $favorite->sortorder,
-                    'type' => $type,
-                    'icon' => $icon,
-                ];
-            }
+            $allfavorites = $this->favorites->get_all();
         }
+
+        $total = count($allfavorites);
+        $totalpages = max(1, (int) ceil($total / $this->perpage));
+
+        if ($this->page > $totalpages) {
+            $this->page = $totalpages;
+        }
+
+        $offset = ($this->page - 1) * $this->perpage;
+        $pageitems = array_slice($allfavorites, $offset, $this->perpage, true);
+
+        foreach ($pageitems as $favorite) {
+            $iscurrent = ($favorite->hash === $currenthash);
+
+            if ($iscurrent) {
+                $hascurrenturl = true;
+            }
+
+            $type = !empty($favorite->type) ? $favorite->type : 'other';
+            $icon = isset($typeicons[$type]) ? $typeicons[$type] : 'fa-star';
+
+            $data[$favorite->hash] = [
+                'name' => $favorite->title,
+                'class' => $iscurrent ? 'active' : '',
+                'url' => $favorite->url,
+                'hash' => $favorite->hash,
+                'sortorder' => $favorite->sortorder,
+                'type' => $type,
+                'icon' => $icon,
+            ];
+        }
+
+        $pagination = new stdClass();
+        $pagination->currentpage = $this->page;
+        $pagination->totalpages = $totalpages;
+        $pagination->hasprev = ($this->page > 1);
+        $pagination->hasnext = ($this->page < $totalpages);
+        $pagination->prevpage = $this->page - 1;
+        $pagination->nextpage = $this->page + 1;
+        $pagination->hasspagination = ($totalpages > 1);
+
+        $pages = [];
+        for ($i = 1; $i <= $totalpages; $i++) {
+            $pages[] = (object) [
+                'page' => $i,
+                'isactive' => ($i === $this->page),
+            ];
+        }
+        $pagination->pages = $pages;
 
         return (object) [
             'data' => new \ArrayIterator($data),
             'has_favorites' => $this->favorites->has_favorites(),
             'hash' => $currenthash,
             'hascurrenturl' => $hascurrenturl,
+            'pagination' => $pagination,
         ];
     }
 }

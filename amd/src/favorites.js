@@ -33,7 +33,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/log', 'core/sortable_l
          * @type {{id: number, debugjs: boolean}}
          */
         let opts = {
-            debugjs: true, id: 0, url: '', hash: ''
+            debugjs: true, id: 0, url: '', hash: '', page: 1
         };
 
         /**
@@ -242,10 +242,11 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/log', 'core/sortable_l
              * Add or update a url
              */
             setOrder: function() {
+                var offset = (opts.page - 1) * 12;
                 $('ol#block_user_favorites-items li').each(function(index) {
                     Ajax.call([{
                         methodname: 'block_user_favorites_set_order', args: {
-                            hash: $(this).data('hash'), sortorder: index
+                            hash: $(this).data('hash'), sortorder: offset + index
                         }
                     }]);
                 });
@@ -277,7 +278,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/log', 'core/sortable_l
 
                 let request = Ajax.call([{
                     methodname: 'block_user_favorites_content', args: {
-                        url: opts.url, blockid: opts.id,
+                        url: opts.url, blockid: opts.id, page: opts.page,
                     }
                 }]);
 
@@ -286,8 +287,26 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/log', 'core/sortable_l
                     $('.block_user_favorites .content').html(response.content);
                     // Re-attach drag/drop callback on the new content to ensure sorting still works after content refresh.
                     attachDragDropHandlers();
+                    favoritesModule.bindPagination();
                 }).fail(Notification.exception);
 
+            },
+
+            /**
+             * Bind pagination click handlers
+             */
+            bindPagination: function() {
+                $('.fav-page-link').off('click').on('click', function() {
+                    var $this = $(this);
+                    if ($this.hasClass('active')) {
+                        return;
+                    }
+                    var targetPage = parseInt($this.data('page'), 10);
+                    if (targetPage > 0) {
+                        opts.page = targetPage;
+                        favoritesModule.reload();
+                    }
+                });
             },
 
             /**
@@ -358,6 +377,8 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/log', 'core/sortable_l
                 new SortableList('ol#block_user_favorites-items');
                 // Attach the drag/drop callbacks.
                 attachDragDropHandlers();
+                // Bind pagination.
+                favoritesModule.bindPagination();
             }
         };
 
