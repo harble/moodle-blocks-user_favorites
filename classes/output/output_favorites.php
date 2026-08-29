@@ -115,12 +115,15 @@ class output_favorites implements renderable, templatable {
         $offset = ($this->page - 1) * $this->perpage;
         $pageitems = array_slice($allfavorites, $offset, $this->perpage, true);
 
+        foreach ($allfavorites as $favorite) {
+            if ($favorite->hash === $currenthash) {
+                $hascurrenturl = true;
+                break;
+            }
+        }
+
         foreach ($pageitems as $favorite) {
             $iscurrent = ($favorite->hash === $currenthash);
-
-            if ($iscurrent) {
-                $hascurrenturl = true;
-            }
 
             $type = !empty($favorite->type) ? $favorite->type : 'other';
             $icon = isset($typeicons[$type]) ? $typeicons[$type] : 'fa-star';
