@@ -15,39 +15,39 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Edit instance config.
+ * Form for editing user_favorites block instances.
  *
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
- * @package    block_user_favorites
- * @copyright  26-10-2018 MFreak.nl
- * @author     Luuk Verhoeven
+ * @package   block_user_favorites
+ * @copyright 2024
+ * @author    Luuk Verhoeven
  **/
 
-/**
- * Class block_user_favorites_edit_form
- *
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *
- * @package    block_user_favorites
- * @copyright  26-10-2018 MFreak.nl
- * @author     Luuk Verhoeven
- */
 class block_user_favorites_edit_form extends block_edit_form {
-    /**
-     * specific_definition
-     *
-     * @param object $mform
-     *
-     * @throws coding_exception
-     */
-    protected function specific_definition($mform): void {
 
+    protected function specific_definition($mform) {
         $mform->addElement('header', 'configheader', get_string('blocksettings', 'block'));
 
-        // A sample string variable with a default value.
-        $mform->addElement('text', 'config_title', get_string('pluginname', 'block_user_favorites'));
-        $mform->setDefault('config_title', get_string('pluginname', 'block_user_favorites'));
+        $mform->addElement('text', 'config_title', get_string('configtitle', 'block'));
         $mform->setType('config_title', PARAM_TEXT);
+
+        $perpageoptions = [
+            4 => '4',
+            6 => '6',
+            8 => '8',
+            10 => '10',
+            12 => '12',
+            16 => '16',
+            20 => '20',
+        ];
+        $mform->addElement('select', 'config_perpage',
+            get_string('config:perpage', 'block_user_favorites'), $perpageoptions);
+        $mform->setDefault('config_perpage', 8);
+        $mform->setType('config_perpage', PARAM_INT);
+    }
+
+    public static function display_form_when_adding(): bool {
+        return true;
     }
 }

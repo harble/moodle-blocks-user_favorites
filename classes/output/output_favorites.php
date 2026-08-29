@@ -68,7 +68,7 @@ class output_favorites implements renderable, templatable {
      * @param int $page
      * @param int $perpage
      */
-    public function __construct(favorites $favorites, string $currenturl = '', int $page = 1, int $perpage = 12) {
+    public function __construct(favorites $favorites, string $currenturl = '', int $page = 1, int $perpage = 8) {
         $this->favorites = $favorites;
         $this->currenturl = $currenturl;
         $this->page = max(1, $page);

@@ -33,7 +33,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/log', 'core/sortable_l
          * @type {{id: number, debugjs: boolean}}
          */
         let opts = {
-            debugjs: true, id: 0, url: '', hash: '', page: 1
+            debugjs: true, id: 0, url: '', hash: '', page: 1, perpage: 8
         };
 
         /**
@@ -242,7 +242,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/log', 'core/sortable_l
              * Add or update a url
              */
             setOrder: function() {
-                var offset = (opts.page - 1) * 12;
+                var offset = (opts.page - 1) * opts.perpage;
                 $('ol#block_user_favorites-items li').each(function(index) {
                     Ajax.call([{
                         methodname: 'block_user_favorites_set_order', args: {
@@ -278,7 +278,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/log', 'core/sortable_l
 
                 let request = Ajax.call([{
                     methodname: 'block_user_favorites_content', args: {
-                        url: opts.url, blockid: opts.id, page: opts.page,
+                        url: opts.url, blockid: opts.id, page: opts.page, perpage: opts.perpage,
                     }
                 }]);
 

@@ -119,12 +119,15 @@ class block_user_favorites extends block_base {
         }
         $fullurl .= $requesturi;
 
+        $perpage = !empty($this->config->perpage) ? (int) $this->config->perpage : 8;
+
         $this->page->requires->js_call_amd('block_user_favorites/favorites', 'initialise', [
             [
                 'debugjs' => \block_user_favorites\helper::has_debugging_enabled(),
                 'id' => $this->instance->id,
                 'url' => $fullurl,
                 'hash' => md5($fullurl),
+                'perpage' => $perpage,
             ],
         ]);
 
@@ -133,7 +136,9 @@ class block_user_favorites extends block_base {
         $renderer = $this->page->get_renderer('block_user_favorites');
         $this->content->text = $renderer->render_favorites(new output_favorites(
             $favorites,
-            $fullurl
+            $fullurl,
+            1,
+            $perpage
         ));
 
         return $this->content;

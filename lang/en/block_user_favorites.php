@@ -47,6 +47,9 @@ $string['btn:moreactions'] = 'More actions';
 $string['btn:prevpage'] = 'Previous page';
 $string['btn:nextpage'] = 'Next page';
 
+// Config.
+$string['config:perpage'] = 'Items per page';
+
 // Js.
 $string['javascript:yes'] = 'Save';
 $string['javascript:no'] = 'Cancel';

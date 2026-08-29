@@ -47,6 +47,9 @@ $string['btn:moreactions'] = '更多操作';
 $string['btn:prevpage'] = '上一页';
 $string['btn:nextpage'] = '下一页';
 
+// Config.
+$string['config:perpage'] = '每页显示条数';
+
 // Js.
 $string['javascript:yes'] = '保存';
 $string['javascript:no'] = '取消';
