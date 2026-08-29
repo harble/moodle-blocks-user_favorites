@@ -97,7 +97,7 @@
 {{/hasspagination}}
 {{/has_favorites}}
 {{/pagination}}
-<div class="block_user_favorites-control">
+<span class="block_user_favorites-control" style="float: right;">
     {{^hascurrenturl}}
         <span class="btn btn-secondary" id="block_user_favorites_set">
             {{# str}} btn:add, block_user_favorites {{/ str}}
@@ -108,4 +108,4 @@
             {{# str}} btn:delete, block_user_favorites {{/ str}}
         </span>
     {{/hascurrenturl}}
-</div>
+</span>
