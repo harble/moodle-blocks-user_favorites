@@ -109,10 +109,15 @@ class block_user_favorites extends block_base {
             'javascript:set_title',
         ], 'block_user_favorites');
 
-        $url = $this->page->url->out(false);
-        $requesturi = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $url;
-        $baseurl = $this->page->url->out(false, [], false);
-        $fullurl = $baseurl . $requesturi;
+        $requesturi = isset($_SERVER['REQUEST_URI'])
+            ? $_SERVER['REQUEST_URI']
+            : $this->page->url->out(false);
+        $fullurl = $this->page->url->get_scheme() . '://' . $this->page->url->get_host();
+        $port = $this->page->url->get_port();
+        if ($port) {
+            $fullurl .= ':' . $port;
+        }
+        $fullurl .= $requesturi;
 
         $this->page->requires->js_call_amd('block_user_favorites/favorites', 'initialise', [
             [
