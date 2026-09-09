@@ -49,6 +49,7 @@ $string['btn:nextpage'] = 'Next page';
 
 // Config.
 $string['config:perpage'] = 'Items per page';
+$string['configtitle'] = 'Block title';
 
 // Js.
 $string['javascript:yes'] = 'Save';

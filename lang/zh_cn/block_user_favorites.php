@@ -49,6 +49,7 @@ $string['btn:nextpage'] = '下一页';
 
 // Config.
 $string['config:perpage'] = '每页显示条数';
+$string['configtitle'] = '区块标题';
 
 // Js.
 $string['javascript:yes'] = '保存';
