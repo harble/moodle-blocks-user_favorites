@@ -97,6 +97,7 @@ class output_favorites implements renderable, templatable {
             'share' => 'fa-share-nodes',
             'question' => 'fa-comments',
             'course' => 'fa-book',
+            'profile' => 'fa-user',
             'other' => 'fa-star',
         ];
 

@@ -87,6 +87,21 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/log', 'core/sortable_l
          */
         const getDefaultTitle = function() {
             var result = {title: $.trim($('title').text()), type: 'other'};
+
+            var pathname = window.location.pathname || '';
+            if (/\/user\/profile\.php/.test(pathname)) {
+                var $profileHeader = $('#page-header');
+                var profileTitle = '';
+                if ($profileHeader.length) {
+                    profileTitle = $.trim($profileHeader.find('h1').first().text());
+                }
+                if (profileTitle) {
+                    result.title = profileTitle;
+                    result.type = 'profile';
+                    return result;
+                }
+            }
+
             var $single = $('#defaulttemplate-single');
 
             if ($single.length) {
