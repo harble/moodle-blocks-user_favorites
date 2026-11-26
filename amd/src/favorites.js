@@ -187,7 +187,7 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/log', 'core/sortable_l
              * Add or update a url
              *
              * @param {object} data
-             * @param {string} title
+             * @param {string} titleResult
              */
             setUrl: function(data, titleResult) {
 
@@ -412,6 +412,21 @@ define(['jquery', 'core/ajax', 'core/notification', 'core/log', 'core/sortable_l
                 Log.log(opts.debugjs);
                 Log.log('Block User Favorites v2.0');
                 favoritesModule.init();
+            },
+
+            /**
+             * Refresh the favorites list.
+             *
+             * Lets other modules (e.g. block_vitrina) re-render the favorites
+             * list after a favorite is added/removed outside this block.
+             * No-op if the plugin was never initialised on this page or the
+             * block content element is missing.
+             */
+            reload: function() {
+                if (!opts.id || !$('.block_user_favorites .content').length) {
+                    return;
+                }
+                favoritesModule.reload();
             }
         };
     });
